@@ -1,0 +1,104 @@
+{
+    "name": "djvue/wp-admin-bundle",
+    "description": "Symfony bundle for wp-admin-bundle package",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "djvue",
+            "email": "vahlovd@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org",
+            "only": [
+                "wpackagist-plugin/*",
+                "wpackagist-theme/*"
+            ]
+        },
+        {
+            "type": "composer",
+            "url": "https://pivvenit.github.io/acf-composer-bridge/composer/v3/wordpress-plugin/"
+        }
+    ],
+    "suggest": {
+        "johnpbloch/wordpress": "Wordpress",
+        "advanced-custom-fields/advanced-custom-fields-pro": "Customise WordPress with powerful, professional and intuitive fields.",
+        "wpackagist-plugin/duplicate-post": "Duplicate posts",
+        "wpackagist-plugin/post-types-order": "Change post order",
+        "wpackagist-plugin/taxonomy-terms-order": "Change taxonomy order",
+        "wpackagist-plugin/wordpress-seo": "The favorite WordPress SEO plugin of millions of users worldwide!"
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-mbstring": "*",
+        "symfony/config": "^5.2",
+        "symfony/dependency-injection": "^5.2",
+        "symfony/filesystem": "^5.2",
+        "symfony/routing": "^5.2",
+        "symfony/http-kernel": "^5.2",
+        "symfony/framework-bundle": "^5.2",
+        "symfony/serializer": "^5.2",
+        "symfony/yaml": "^5.2",
+        "symfony/translation": "^5.2",
+        "stoutlogic/acf-builder": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Djvue\\WpAdminBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Djvue\\WpAdminBundle\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "ext-gd": "*",
+        "fakerphp/faker": "^1.13",
+        "symfony/maker-bundle": "^1.29",
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "vimeo/psalm": "^4.4",
+        "psalm/plugin-symfony": "^2.1",
+        "symfony/phpunit-bridge": "^5.2",
+        "symfony/browser-kit": "^5.2",
+        "symfony/css-selector": "^5.2",
+        "johnpbloch/wordpress": "^5.6",
+        "advanced-custom-fields/advanced-custom-fields-pro": "*",
+        "stoutlogic/acf-builder": "^1.10",
+        "wpackagist-plugin/acf-extended": "*",
+        "wpackagist-plugin/duplicate-post": "*",
+        "wpackagist-plugin/post-types-order": "*",
+        "wpackagist-plugin/svg-support": "*",
+        "wpackagist-plugin/taxonomy-terms-order": "*",
+        "wpackagist-plugin/wordpress-seo": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "wp:clear-installation": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.2.*"
+        },
+        "wordpress-install-dir": "var/public/wp",
+        "installer-paths": {
+            "var/public/content/plugins/{$name}/": [
+                "vendor:wpackagist-plugin",
+                "type:wordpress-plugin"
+            ]
+        }
+    }
+}

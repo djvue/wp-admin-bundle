@@ -1,0 +1,38 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Djvue\WpAdminBundle\Command\:
+        resource: '../../Command'
+
+    Djvue\WpAdminBundle\Configurator\:
+        resource: '../../Configurator'
+
+    Djvue\WpAdminBundle\Helper\:
+        resource: '../../Helper'
+
+    Djvue\WpAdminBundle\Helper\DirectoryClassContainer:
+        public: true
+        autoconfigure: false
+        calls:
+            - setContainer: ['@service_container']
+
+    #Djvue\WpAdminBundle\Loader\:
+    #    resource: '../src/WpBundle/Loader'
+    #    public: true
+    Djvue\WpAdminBundle\Loader\LoaderInterface:
+        alias: 'Djvue\WpAdminBundle\Loader\Loader'
+        public: true
+    Djvue\WpAdminBundle\Loader\Loader: ~
+    Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
+        alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
+    Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
