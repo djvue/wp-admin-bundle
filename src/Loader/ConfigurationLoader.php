@@ -16,7 +16,7 @@ class ConfigurationLoader implements ConfigurationLoaderInterface
 
     public function getHost(): string
     {
-        return $this->params->get('wp.host');
+        return $this->params->get('wp_admin.host');
     }
 
     public function getRootDir(): string
@@ -24,9 +24,10 @@ class ConfigurationLoader implements ConfigurationLoaderInterface
         return $this->params->get('kernel.project_dir');
     }
 
-    private function getConfigParameter(string $key, $default = null, $prefix = 'wp.')
+    private function getConfigParameter(string $key, $default = null, $prefix = 'wp_admin.')
     {
-        $fullKey = $prefix . $key;
+        $fullKey = $prefix.$key;
+
         return $this->params->has($fullKey) ? $this->params->get($fullKey) : $default;
     }
 
@@ -54,12 +55,21 @@ class ConfigurationLoader implements ConfigurationLoaderInterface
         define('COOKIEPATH', '/');
 
         if (!defined('ABSPATH')) {
-            define('ABSPATH', $this->getRootDir() . DIRECTORY_SEPARATOR
-                . trim($this->getConfigParameter('wp.root_directory', 'public/wp'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+            define(
+                'ABSPATH',
+                $this->getRootDir().DIRECTORY_SEPARATOR
+                .trim(
+                    $this->getConfigParameter('wp_admin.root_directory', 'public/wp'),
+                    DIRECTORY_SEPARATOR
+                ).DIRECTORY_SEPARATOR
+            );
         }
-        define('WP_CONTENT_DIR', $this->getRootDir() . DIRECTORY_SEPARATOR
-            . trim($this->getConfigParameter('wp.content_directory', 'public/content'), DIRECTORY_SEPARATOR));
-        define('WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins');
+        define(
+            'WP_CONTENT_DIR',
+            $this->getRootDir().DIRECTORY_SEPARATOR
+            .trim($this->getConfigParameter('wp_admin.content_directory', 'public/content'), DIRECTORY_SEPARATOR)
+        );
+        define('WP_PLUGIN_DIR', WP_CONTENT_DIR.'/plugins');
 
         // db config
         $dbConfig = $this->getConfigParameter('database');
@@ -94,7 +104,7 @@ class ConfigurationLoader implements ConfigurationLoaderInterface
         define('WP_DEBUG', $debug);
         define('SAVEQUERIES', $this->getConfigParameter('save_queries', false));
         // %%WP_STAGE%% //'production'
-        define('WP_STAGE', $this->getConfigParameter('wp.env', 'production'));
+        define('WP_STAGE', $this->getConfigParameter('wp_admin.env', 'production'));
         define('STAGING_DOMAIN', '%%WP_STAGING_DOMAIN%%');
     }
 }
