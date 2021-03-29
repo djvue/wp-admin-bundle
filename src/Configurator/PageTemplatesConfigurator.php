@@ -23,14 +23,26 @@ class PageTemplatesConfigurator extends AbstractConfigurator
 
     private function getTemplates(): array
     {
-        $templatesPath = $this->parameterBag->get('twig.default_path').DIRECTORY_SEPARATOR.$this->parameterBag->get(
-                'wp_admin.page_templates_path'
-            );
-        $finder = (new Finder())->in($templatesPath);
-        $files = iterator_to_array($finder);
-        $keys = array_map(fn(SplFileInfo $file) => $this->resolveKey($file), $files);
-        $names = array_map(fn(SplFileInfo $file) => $this->resolveTemplate($file), $files);
-        return array_combine($keys, $names);
+        $arr = [];
+        $templates = $this->parameterBag->get(
+            'wp_admin.page_templates'
+        );
+        if (is_array($templates)) {
+            $keys = array_map(static fn(array $template) => $template['key'] ?? $template['name'] ?? '', $templates);
+            $names = array_map(static fn(array $template) => $template['name'] ?? $template['key'] ?? '', $templates);
+            $arr = array_merge($arr, array_combine($keys, $names));
+        }
+        $templatesPathDirectory = $this->parameterBag->get('wp_admin.page_templates_path');
+        if ($templatesPathDirectory !== null) {
+            $templatesPath = $this->parameterBag->get('twig.default_path').DIRECTORY_SEPARATOR.$templatesPathDirectory;
+            $finder = (new Finder())->in($templatesPath);
+            $files = iterator_to_array($finder);
+            $keys = array_map(fn(SplFileInfo $file) => $this->resolveKey($file), $files);
+            $names = array_map(fn(SplFileInfo $file) => $this->resolveTemplate($file), $files);
+            $arr = array_merge($arr, array_combine($keys, $names));
+        }
+
+        return $arr;
     }
 
     private function resolveKey(SplFileInfo $file)

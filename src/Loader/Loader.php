@@ -138,9 +138,9 @@ class Loader implements LoaderInterface
             spl_autoload_register(['Requests', 'autoloader'], true, true);
             require_once(ABSPATH . 'wp-settings.php');
         } catch (\Throwable $error) {
-            dump($error);
-            die();
-            // throw $error;
+            //            dump($error);
+            //            die();
+            throw $error;
         }
     }
 
