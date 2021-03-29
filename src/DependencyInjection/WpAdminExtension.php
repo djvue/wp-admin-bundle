@@ -20,6 +20,7 @@ class WpAdminExtension extends Extension
         $container->setParameter('wp_admin.database', $config['database']);
         $container->setParameter('wp_admin.namespaces.configurator', $config['namespaces']['configurator']);
         $container->setParameter('wp_admin.namespaces.field_group', $config['namespaces']['field_group']);
+        $container->setParameter('wp_admin.page_templates', $config['page_templates']);
         $container->setParameter('wp_admin.page_templates_path', $config['page_templates_path']);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));

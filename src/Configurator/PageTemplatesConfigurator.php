@@ -24,9 +24,7 @@ class PageTemplatesConfigurator extends AbstractConfigurator
     private function getTemplates(): array
     {
         $arr = [];
-        $templates = $this->parameterBag->get(
-            'wp_admin.page_templates'
-        );
+        $templates = $this->parameterBag->get('wp_admin.page_templates');
         if (is_array($templates)) {
             $keys = array_map(static fn(array $template) => $template['key'] ?? $template['name'] ?? '', $templates);
             $names = array_map(static fn(array $template) => $template['name'] ?? $template['key'] ?? '', $templates);
