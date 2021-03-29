@@ -156,7 +156,7 @@ class Loader implements LoaderInterface
 
     protected function runConfigurators(): void
     {
-        $baseNamespace = $this->parameterBag->get('wp.namespaces.configurator');
+        $baseNamespace = $this->parameterBag->get('wp_admin.namespaces.configurator');
         $configurators = $this->directoryClassContainer->getClasses($baseNamespace);
         $configurators = [...$this->configurators, ...$configurators];
         foreach ($configurators as $configurator) {

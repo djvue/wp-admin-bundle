@@ -23,7 +23,9 @@ class PageTemplatesConfigurator extends AbstractConfigurator
 
     private function getTemplates(): array
     {
-        $templatesPath = $this->parameterBag->get('twig.default_path') . DIRECTORY_SEPARATOR . $this->parameterBag->get('wp.page_templates_path');
+        $templatesPath = $this->parameterBag->get('twig.default_path').DIRECTORY_SEPARATOR.$this->parameterBag->get(
+                'wp_admin.page_templates_path'
+            );
         $finder = (new Finder())->in($templatesPath);
         $files = iterator_to_array($finder);
         $keys = array_map(fn(SplFileInfo $file) => $this->resolveKey($file), $files);

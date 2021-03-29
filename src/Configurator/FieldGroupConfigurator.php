@@ -19,7 +19,7 @@ class FieldGroupConfigurator extends AbstractConfigurator
 
     public function run(): void
     {
-        $baseNamespace = $this->parameterBag->get('wp.namespaces.field_group');
+        $baseNamespace = $this->parameterBag->get('wp_admin.namespaces.field_group');
         $fieldGroups = $this->directoryClassContainer->getClasses($baseNamespace);
         foreach ($fieldGroups as $group) {
             if ($group instanceof Registrable) {

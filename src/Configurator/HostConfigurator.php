@@ -15,7 +15,7 @@ class HostConfigurator extends AbstractConfigurator
 
     public function run(): void
     {
-        $host = $this->parameterBag->get('wp.host');
+        $host = $this->parameterBag->get('wp_admin.host');
         force_ssl_admin(str_contains($host, 'https://'));
         add_filter('site_url', function ($url) use ($host) {
             // var_dump($url . ' -> ' . preg_replace('/^https?:\/\/[^\/]+\/(.+)$/', $host . '/$1', $url));
