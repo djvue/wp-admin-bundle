@@ -13,13 +13,16 @@ class WpAdminBundle extends Bundle
 
     public function boot(): void
     {
-        $loader = $this->container->get(LoaderInterface::class);
-        if ($loader === null) {
-            throw new AutowiringFailedException('Dependency implements LoaderInterface not found');
-        }
-        self::$loader = $loader;
+        $env = $this->container->getParameter('kernel.environment');
+        if ($env !== 'test') {
+            $loader = $this->container->get(LoaderInterface::class);
+            if ($loader === null) {
+                throw new AutowiringFailedException('Dependency implements LoaderInterface not found');
+            }
+            self::$loader = $loader;
 
-        $loader->loadCore();
+            $loader->loadCore();
+        }
     }
 
     public function build(ContainerBuilder $container): void
