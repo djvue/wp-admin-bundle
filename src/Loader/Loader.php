@@ -66,7 +66,7 @@ class Loader implements LoaderInterface
 
     protected function isConsole(): bool
     {
-        return $_SERVER['SCRIPT_NAME'] === 'bin/console';
+        return str_contains($_SERVER['SCRIPT_NAME'], 'bin/console');
     }
 
     public function terminate(): void
