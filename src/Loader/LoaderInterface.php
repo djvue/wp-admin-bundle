@@ -6,5 +6,5 @@ namespace Djvue\WpAdminBundle\Loader;
 
 interface LoaderInterface
 {
-    public function loadCore(): void;
+    public function loadCore(bool $ignoreNoConsole): void;
 }

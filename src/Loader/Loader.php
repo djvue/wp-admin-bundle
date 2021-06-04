@@ -46,12 +46,12 @@ class Loader implements LoaderInterface
         ];
     }
 
-    public function loadCore(): void
+    public function loadCore(bool $ignoreNoConsole = false): void
     {
-        if (!$this->isLoaded() && !$this->isConsole()) {
+        if (!$this->isLoaded() && ($ignoreNoConsole || !$this->isConsole())) {
             $this->configurationLoader->load();
             /** @psalm-suppress UndefinedConstant */
-            require_once ABSPATH.'/wp-includes/plugin.php';
+            require_once ABSPATH . '/wp-includes/plugin.php';
             /** @psalm-suppress UndefinedFunction */
             add_action('muplugins_loaded', fn() => $this->runConfigurators());
             $this->doLoadCore();
