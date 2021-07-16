@@ -5,24 +5,38 @@ namespace Djvue\WpAdminBundle\Configurator;
 use Djvue\WpAdminBundle\Helper\DirectoryClassContainer;
 use Djvue\WpAdminBundle\Interfaces\Registrable;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class FieldGroupConfigurator extends AbstractConfigurator
 {
-    private ParameterBagInterface $parameterBag;
-    private DirectoryClassContainer $directoryClassContainer;
+    public const CACHE_PREFIX = 'wp-admin-bundle_';
+    protected bool $enableCache;
+    protected string $baseNamespace;
 
-    public function __construct(ParameterBagInterface $parameterBag, DirectoryClassContainer $directoryClassContainer)
+    public function __construct(
+        private CacheInterface $cache,
+        private DirectoryClassContainer $directoryClassContainer,
+        ParameterBagInterface $parameterBag,
+        KernelInterface $kernel,
+    )
     {
-        $this->parameterBag = $parameterBag;
-        $this->directoryClassContainer = $directoryClassContainer;
+        $this->enableCache = !$kernel->isDebug() && $parameterBag->get('wp_admin.enable_cache');
+        $this->baseNamespace = $parameterBag->get('wp_admin.namespaces.field_group');
     }
 
     public function run(): void
     {
-        $baseNamespace = $this->parameterBag->get('wp_admin.namespaces.field_group');
-        $fieldGroups = $this->directoryClassContainer->getClasses($baseNamespace);
+        $fieldGroups = $this->directoryClassContainer->getClasses($this->baseNamespace);
         foreach ($fieldGroups as $group) {
             if ($group instanceof Registrable) {
+                $group->setMaybeCacheFn(function (string $class, callable $fn) {
+                    if ($this->enableCache) {
+                        $key = self::CACHE_PREFIX.str_replace('\\', '_', $class);
+                        return $this->cache->get($key, $fn);
+                    }
+                    return $fn();
+                });
                 add_action('plugins_loaded', fn() => $group->register());
             }
         }

@@ -36,3 +36,4 @@ services:
     Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
     Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
+    Djvue\WpAdminBundle\Service\FieldCacheClearer: ~

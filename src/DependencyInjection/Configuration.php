@@ -15,6 +15,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
+            ->booleanNode('enable_cache')->defaultValue('true')->end()
             ->scalarNode('host')->end()
             ->scalarNode('table_prefix')->end()
             ->arrayNode('database')

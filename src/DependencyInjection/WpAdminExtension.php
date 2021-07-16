@@ -15,6 +15,7 @@ class WpAdminExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('wp_admin.enable_cache', $config['enable_cache']);
         $container->setParameter('wp_admin.host', $config['host']);
         $container->setParameter('wp_admin.table_prefix', $config['table_prefix']);
         $container->setParameter('wp_admin.database', $config['database']);

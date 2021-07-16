@@ -4,15 +4,25 @@ namespace Djvue\WpAdminBundle\FieldGroup;
 
 use Djvue\WpAdminBundle\Interfaces\Registrable;
 use StoutLogic\AcfBuilder\FieldsBuilder;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Closure;
 
 abstract class AbstractFieldGroup implements Registrable
 {
     protected string $name;
     protected FieldsBuilder $builder;
     protected int $menuOrder = 10;
+    protected ?Closure $maybeCacheFn = null;
 
     public function __construct()
     {
+    }
+
+    public function setMaybeCacheFn(callable $fn): void
+    {
+        $this->maybeCacheFn = Closure::fromCallable($fn);
     }
 
     public function register(): void
@@ -20,7 +30,14 @@ abstract class AbstractFieldGroup implements Registrable
         $this->builder = $this->createBuilder($this->name);
         $this->fields($this->builder);
         if (function_exists('acf_add_local_field_group')) {
-            acf_add_local_field_group($this->builder->build());
+            $fn = fn() => $this->builder->build();
+            $maybeCacheFn = $this->maybeCacheFn;
+            if ($maybeCacheFn !== null) {
+                $fields = $maybeCacheFn(static::class, $fn);
+            } else {
+                $fields = $fn();
+            }
+            acf_add_local_field_group($fields);
         }
     }
 
