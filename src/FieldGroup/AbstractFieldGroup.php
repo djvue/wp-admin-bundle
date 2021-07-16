@@ -2,12 +2,9 @@
 
 namespace Djvue\WpAdminBundle\FieldGroup;
 
+use Closure;
 use Djvue\WpAdminBundle\Interfaces\Registrable;
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Closure;
 
 abstract class AbstractFieldGroup implements Registrable
 {
@@ -27,10 +24,13 @@ abstract class AbstractFieldGroup implements Registrable
 
     public function register(): void
     {
-        $this->builder = $this->createBuilder($this->name);
-        $this->fields($this->builder);
         if (function_exists('acf_add_local_field_group')) {
-            $fn = fn() => $this->builder->build();
+            $fn = function () {
+                $this->builder = $this->createBuilder($this->name);
+                $this->fields($this->builder);
+
+                return $this->builder->build();
+            };
             $maybeCacheFn = $this->maybeCacheFn;
             if ($maybeCacheFn !== null) {
                 $fields = $maybeCacheFn(static::class, $fn);
@@ -46,6 +46,7 @@ abstract class AbstractFieldGroup implements Registrable
         $builder = new FieldsBuilder($name, [
             'menu_order' => $this->menuOrder
         ]);
+
         return $this->prepareBuilder($builder);
     }
 
@@ -60,6 +61,7 @@ abstract class AbstractFieldGroup implements Registrable
             'tags',
             'send-trackbacks',
         ]);
+
         return $builder;
     }
 
