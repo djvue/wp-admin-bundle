@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Configurator;
 
-use Djvue\WpAdminBundle\Helper\OptionFields;
-use Djvue\WpAdminBundle\Helper\PostFields;
+use Djvue\WpAdminBundle\Service\OptionFields;
+use Djvue\WpAdminBundle\Service\PostFields;
 use Djvue\WpAdminBundle\Service\WpFacade;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
