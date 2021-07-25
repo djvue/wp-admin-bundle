@@ -3,10 +3,9 @@
 namespace Djvue\WpAdminBundle\FieldGroup;
 
 use Closure;
-use Djvue\WpAdminBundle\Interfaces\Registrable;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
-abstract class AbstractFieldGroup implements Registrable
+abstract class AbstractFieldGroup implements FieldGroupInterface
 {
     protected string $name;
     protected FieldsBuilder $builder;

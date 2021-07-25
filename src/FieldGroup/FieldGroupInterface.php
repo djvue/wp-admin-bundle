@@ -1,10 +1,8 @@
 <?php
 
+namespace Djvue\WpAdminBundle\FieldGroup;
 
-namespace Djvue\WpAdminBundle\Interfaces;
-
-
-interface Registrable
+interface FieldGroupInterface
 {
     public function setMaybeCacheFn(callable $fn): void;
 
