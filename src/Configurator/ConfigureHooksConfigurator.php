@@ -1,19 +1,66 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Djvue\WpAdminBundle\Configurator;
+
+use Djvue\WpAdminBundle\Service\OptionFieldsCacheClearer;
+use Djvue\WpAdminBundle\Service\WpFacade;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ConfigureHooksConfigurator implements ConfiguratorInterface
 {
-    public function __construct()
-    {
+    private string $defaultTimezone;
+
+    public function __construct(
+        private WpFacade $wp,
+        private OptionFieldsCacheClearer $fieldOptionsCacheClearer,
+        ParameterBagInterface $parameterBag,
+    ) {
+        $this->defaultTimezone = $parameterBag->get('wp_admin.default_timezone');
     }
 
     public function run(): void
     {
-        add_action('init', function () {
-            $this->configureWpHeadHooks();
-            $this->configureWpFooterHooks();
-        });
+        date_default_timezone_set($this->defaultTimezone);
+        $this->wp->addFilter(
+            'init',
+            function () {
+                $this->configureWpHeadHooks();
+                $this->configureWpFooterHooks();
+            }
+        );
+    }
+
+    private function configureWpHooks(): void
+    {
+        $this->wp->removeAllFilters('wp_maybe_load_widgets', 0);
+        $this->wp->removeFilter('init', 'wp_widgets_init', 1);
+
+        $this->wp->removeFilter('admin_menu', [$this, 'adminMenu']);
+
+        $this->wp->removeFilter('init', [$this, 'registerPostTypes']);
+
+        $this->wp->removeFilter('use_block_editor_for_post', '__return_false', 10);
+        $this->wp->removeFilter('use_block_editor_for_post_type', '__return_false', 10);
+
+        $this->wp->removeFilter('pre_option_permalink_structure', fn () => '/%postname%');
+        $this->wp->removeFilter('pre_option_category_base', fn () => '/');
+        $this->wp->removeFilter('pre_option_tag_base', fn () => '/tags');
+
+        $this->wp->removeFilter('show_admin_bar', '__return_false');
+        $this->wp->removeFilter('wp_headers', fn () => []);
+
+        $this->wp->addFilter(
+            'acf/update_value',
+            function ($value, $postId, $field) {
+                $this->fieldOptionsCacheClearer->refresh();
+
+                return $value;
+            },
+            10,
+            3
+        );
     }
 
     private function configureWpHeadHooks(): void
@@ -60,7 +107,7 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
                 10
             );
         }
-        add_action(
+        $this->wp->addFilter(
             'wp_enqueue_scripts',
             function () {
                 global $wp_styles;

@@ -1,57 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Djvue\WpAdminBundle\Loader;
 
-use Djvue\WpAdminBundle\Configurator\ConfigureHooksConfigurator;
-use Djvue\WpAdminBundle\Configurator\FieldGroupConfigurator;
-use Djvue\WpAdminBundle\Configurator\HostConfigurator;
-use Djvue\WpAdminBundle\Configurator\PageTemplatesConfigurator;
-use Djvue\WpAdminBundle\Configurator\SlugTranslitConfigurator;
-use Djvue\WpAdminBundle\Helper\DirectoryClassContainer;
-use Djvue\WpAdminBundle\Interfaces\Runnable;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Djvue\WpAdminBundle\Service\WpFacade;
 
 class Loader implements LoaderInterface
 {
-    private ConfigurationLoaderInterface $configurationLoader;
-    private DirectoryClassContainer $directoryClassContainer;
-    private ParameterBagInterface $parameterBag;
-    /**
-     * @var Runnable[] $configurators
-     */
-    private array $configurators;
-
     public function __construct(
-        iterable $configurators,
-
-        ConfigurationLoaderInterface $configurationLoader,
-        DirectoryClassContainer $directoryClassContainer,
-        ParameterBagInterface $parameterBag,
-    )
-    {
-        $this->configurationLoader = $configurationLoader;
-        $this->directoryClassContainer = $directoryClassContainer;
-        $this->parameterBag = $parameterBag;
-        $this->configurators = [
-            $fieldGroupConfigurator,
-            $hostConfigurator,
-            $pageTemplatesConfigurator,
-            $slugTranslitConfigurator,
-            $configureHooksConfigurator
-        ];
+        private ConfigurationLoaderInterface $configurationLoader,
+        private ConfiguratorLoaderInterface $configuratorLoader,
+        private WpFacade $wp,
+    ) {
     }
 
     public function loadCore(bool $ignoreNoConsole = false): void
     {
         if (!$this->isLoaded() && ($ignoreNoConsole || !$this->isConsole())) {
             $this->configurationLoader->load();
-            /** @psalm-suppress UndefinedConstant */
-            require_once ABSPATH . '/wp-includes/plugin.php';
-            /** @psalm-suppress UndefinedFunction */
-            add_action('muplugins_loaded', fn() => $this->runConfigurators());
+            $this->requireCore();
+            $this->wp->addFilter('muplugins_loaded', fn () => $this->configuratorLoader->load());
             $this->doLoadCore();
             // $this->terminate();
         }
+    }
+
+    protected function requireCore(): void
+    {
+        /** @psalm-suppress UndefinedConstant */
+        require_once ABSPATH.'/wp-includes/plugin.php';
     }
 
     protected function isLoaded(): bool
@@ -117,9 +95,11 @@ class Loader implements LoaderInterface
         */
         // register globals>>
 
-        do_action_ref_array( 'wp', array( &$wp ) );
+        if (function_exists('do_action_ref_array')) {
+            do_action_ref_array('wp', [&$wp]);
+        }
 
-        if ( ! isset( $wp_the_query ) ) {
+        if (!isset($wp_the_query)) {
             $wp_the_query = $wp_query;
         }
     }
@@ -146,18 +126,6 @@ class Loader implements LoaderInterface
         }
         if (!isset($_SERVER['REQUEST_URI'])) {
             $_SERVER['REQUEST_URI'] = '/';
-        }
-    }
-
-    protected function runConfigurators(): void
-    {
-        $baseNamespace = $this->parameterBag->get('wp_admin.namespaces.configurator');
-        $configurators = $this->directoryClassContainer->getClasses($baseNamespace);
-        $configurators = [...$this->configurators, ...$configurators];
-        foreach ($configurators as $configurator) {
-            if ($configurator instanceof Runnable) {
-                $configurator->run();
-            }
         }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Djvue\WpAdminBundle\Configurator;
 
 use Symfony\Component\String\Slugger\AsciiSlugger;

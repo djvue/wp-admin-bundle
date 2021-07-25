@@ -24,18 +24,28 @@ services:
         public: true
         autoconfigure: false
         calls:
-            - setContainer: ['@service_container']
+            -   setContainer: [ '@service_container' ]
 
-    #Djvue\WpAdminBundle\Loader\:
-    #    resource: '../src/WpBundle/Loader'
-    #    public: true
     Djvue\WpAdminBundle\Loader\LoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\Loader'
         public: true
     Djvue\WpAdminBundle\Loader\Loader:
         arguments:
             - !tagged_iterator wp_admin.configurator
+    Djvue\WpAdminBundle\FieldGroup\FieldGroupConfigurator:
+        arguments:
+            - !tagged_iterator wp_admin.field_group
+            - '%wp_admin.enable_cache%'
+            - '%kernel.debug%'
     Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
+    Djvue\WpAdminBundle\Loader\ConfiguratorLoaderInterface:
+        alias: 'Djvue\WpAdminBundle\Loader\ConfiguratorLoader'
     Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
     Djvue\WpAdminBundle\Service\FieldCacheClearer: ~
+    Djvue\WpAdminBundle\Helper\FieldOptions:
+        arguments:
+            - '%wp_admin.enable_options_cache%'
+    Djvue\WpAdminBundle\Helper\PostFields:
+        arguments:
+            - '%wp_admin.enable_post_fields_cache%'

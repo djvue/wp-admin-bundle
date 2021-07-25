@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\DependencyInjection;
 
@@ -16,6 +17,8 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
             ->booleanNode('enable_cache')->defaultValue('true')->end()
+            ->booleanNode('enable_options_cache')->defaultValue('true')->end()
+            ->booleanNode('enable_post_fields_cache')->defaultValue('true')->end()
             ->scalarNode('host')->end()
             ->scalarNode('table_prefix')->end()
             ->arrayNode('database')
@@ -27,12 +30,6 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('password')->end()
             ->end()
             ->end()
-            ->arrayNode('namespaces')
-            ->children()
-            ->scalarNode('configurator')->end()
-            ->scalarNode('field_group')->end()
-            ->end()
-            ->end()
             ->arrayNode('page_templates')
             ->defaultValue([])
             ->arrayPrototype()
@@ -42,14 +39,13 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->end()
             ->end()
-            ->scalarNode('page_templates_path')->defaultValue(null)->end()
-            // TODO: add configurator to customize route prefix
             ->arrayNode('routing')
             ->addDefaultsIfNotSet()
             ->children()
             ->scalarNode('post_prefix')->defaultValue('/blog/')->end()
             ->end()
             ->end()
+            ->scalarNode('default_timezone')->defaultValue('Europe/Moscow')->end()
             ->end()
         ;
 

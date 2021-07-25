@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Service;
 
-use Djvue\WpAdminBundle\Configurator\FieldGroupConfigurator;
 use Psr\Cache\CacheItemPoolInterface;
 
 final class FieldCacheClearer
@@ -16,6 +15,6 @@ final class FieldCacheClearer
 
     public function clear(): void
     {
-        $this->cache->clear(FieldGroupConfigurator::CACHE_PREFIX);
+        $this->cache->clear();
     }
 }

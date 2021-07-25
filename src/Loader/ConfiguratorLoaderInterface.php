@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Loader;
 
-interface ConfigurationLoaderInterface
+interface ConfiguratorLoaderInterface
 {
-    public function getTablePrefix(): string;
     public function load(): void;
 }

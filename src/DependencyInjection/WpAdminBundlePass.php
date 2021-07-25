@@ -1,13 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\DependencyInjection;
 
 
-use Djvue\WpAdminBundle\Loader\ConfigurationLoader;
-use Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface;
-use Djvue\WpAdminBundle\Loader\Loader;
-use Djvue\WpAdminBundle\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
