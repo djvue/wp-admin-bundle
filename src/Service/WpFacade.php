@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Service;
 
+use WP_Post;
+
 final class WpFacade
 {
     public function __construct(
@@ -94,7 +96,7 @@ final class WpFacade
         return \update_option($option, $value, false);
     }
 
-    public function getPostBySlug(string $slug, string $postType = 'post'): ?\WP_Post
+    public function getPostBySlug(string $slug, string $postType = 'post'): ?WP_Post
     {
         [$posts] = $this->query(
             [
@@ -109,7 +111,6 @@ final class WpFacade
     }
 
     /**
-     * @param array $data
      * @psalm-return array{0: list<\WP_Post>, 1: int}
      */
     public function query(array $data): array
@@ -121,12 +122,12 @@ final class WpFacade
         return [$posts, $total];
     }
 
-    public function getPageByPath(string $path): ?\WP_Post
+    public function getPageByPath(string $path): ?WP_Post
     {
         return \get_page_by_path($path);
     }
 
-    public function getTemplateNameByPost(\WP_Post $post): string
+    public function getTemplateNameByPost(WP_Post $post): string
     {
         return \get_page_template_slug($post);
     }
@@ -136,7 +137,7 @@ final class WpFacade
         return $this->host;
     }
 
-    public function getPostPath(\WP_Post|int $post): string
+    public function getPostPath(WP_Post|int $post): string
     {
         return $this->getPath($this->getPostUrl($post));
     }
@@ -146,17 +147,17 @@ final class WpFacade
         return str_replace($this->host, '', $url);
     }
 
-    public function getPostUrl(\WP_Post|int $post): string
+    public function getPostUrl(WP_Post|int $post): string
     {
         return \get_permalink($post);
     }
 
-    public function getPostById(int $postId): ?\WP_Post
+    public function getPostById(int $postId): ?WP_Post
     {
         return \get_post($postId);
     }
 
-    public function getMainPost(): ?\WP_Post
+    public function getMainPost(): ?WP_Post
     {
         $mainPageId = (int) get_option('page_on_front');
 
