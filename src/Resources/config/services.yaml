@@ -33,7 +33,7 @@ services:
         alias: 'Djvue\WpAdminBundle\Loader\ConfiguratorLoader'
     Djvue\WpAdminBundle\Loader\ConfiguratorLoader: ~
 
-    Djvue\WpAdminBundle\FieldGroup\FieldGroupConfigurator:
+    Djvue\WpAdminBundle\Configurator\FieldGroupConfigurator:
         arguments:
             - !tagged_iterator wp_admin.field_group
             - '%wp_admin.enable_cache%'
