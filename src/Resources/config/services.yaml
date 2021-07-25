@@ -41,7 +41,7 @@ services:
     Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
     Djvue\WpAdminBundle\Loader\ConfiguratorLoader: ~
     Djvue\WpAdminBundle\Service\FieldCacheClearer: ~
-    Djvue\WpAdminBundle\Service\FieldOptions:
+    Djvue\WpAdminBundle\Service\OptionFields:
         arguments:
             - '%wp_admin.enable_options_cache%'
     Djvue\WpAdminBundle\Service\PostFields:
