@@ -17,11 +17,8 @@ services:
     Djvue\WpAdminBundle\Configurator\:
         resource: '../../Configurator'
 
-    Djvue\WpAdminBundle\Helper\DirectoryClassContainer:
-        public: true
-        autoconfigure: false
-        calls:
-            -   setContainer: [ '@service_container' ]
+    Djvue\WpAdminBundle\Service\:
+        resource: '../../Service'
 
     Djvue\WpAdminBundle\Loader\LoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\Loader'
@@ -29,27 +26,28 @@ services:
     Djvue\WpAdminBundle\Loader\Loader:
         arguments:
             - !tagged_iterator wp_admin.configurator
+    Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
+        alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
+    Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
+    Djvue\WpAdminBundle\Loader\ConfiguratorLoaderInterface:
+        alias: 'Djvue\WpAdminBundle\Loader\ConfiguratorLoader'
+    Djvue\WpAdminBundle\Loader\ConfiguratorLoader: ~
+
     Djvue\WpAdminBundle\FieldGroup\FieldGroupConfigurator:
         arguments:
             - !tagged_iterator wp_admin.field_group
             - '%wp_admin.enable_cache%'
             - '%kernel.debug%'
-    Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
-        alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
-    Djvue\WpAdminBundle\Loader\ConfiguratorLoaderInterface:
-        alias: 'Djvue\WpAdminBundle\Loader\ConfiguratorLoader'
-    Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
-    Djvue\WpAdminBundle\Loader\ConfiguratorLoader: ~
-    Djvue\WpAdminBundle\Service\FieldCacheClearer: ~
-    Djvue\WpAdminBundle\Service\OptionFields:
-        arguments:
-            - '%wp_admin.enable_options_cache%'
-    Djvue\WpAdminBundle\Service\PostFields:
-        arguments:
-            - '%wp_admin.enable_post_fields_cache%'
     Djvue\WpAdminBundle\Configurator\HostConfigurator:
         arguments:
             - '%wp_admin.host%'
     Djvue\WpAdminBundle\Configurator\PageTemplatesConfigurator:
         arguments:
             - '%wp_admin.page_templates%'
+
+    Djvue\WpAdminBundle\Service\OptionFields:
+        arguments:
+            - '%wp_admin.enable_options_cache%'
+    Djvue\WpAdminBundle\Service\PostFields:
+        arguments:
+            - '%wp_admin.enable_post_fields_cache%'
