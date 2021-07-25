@@ -4,7 +4,7 @@ namespace Djvue\WpAdminBundle\Configurator;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class HostConfigurator extends AbstractConfigurator
+class HostConfigurator implements ConfiguratorInterface
 {
     private ParameterBagInterface $parameterBag;
 

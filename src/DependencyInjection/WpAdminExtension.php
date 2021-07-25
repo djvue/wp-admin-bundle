@@ -3,6 +3,8 @@
 
 namespace Djvue\WpAdminBundle\DependencyInjection;
 
+use Djvue\WpAdminBundle\Configurator\AbstractConfigurator;
+use Djvue\WpAdminBundle\Configurator\ConfiguratorInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -12,6 +14,9 @@ class WpAdminExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $container->registerForAutoconfiguration(ConfiguratorInterface::class)
+            ->addTag('wp_admin.configurator');
+
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 

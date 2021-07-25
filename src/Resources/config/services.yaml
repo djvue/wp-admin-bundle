@@ -32,7 +32,9 @@ services:
     Djvue\WpAdminBundle\Loader\LoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\Loader'
         public: true
-    Djvue\WpAdminBundle\Loader\Loader: ~
+    Djvue\WpAdminBundle\Loader\Loader:
+        arguments:
+            - !tagged_iterator wp_admin.configurator
     Djvue\WpAdminBundle\Loader\ConfigurationLoaderInterface:
         alias: 'Djvue\WpAdminBundle\Loader\ConfigurationLoader'
     Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~

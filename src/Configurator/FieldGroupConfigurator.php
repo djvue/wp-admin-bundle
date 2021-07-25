@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
-class FieldGroupConfigurator extends AbstractConfigurator
+class FieldGroupConfigurator implements ConfiguratorInterface
 {
     public const CACHE_PREFIX = 'wp-admin-bundle_';
     protected bool $enableCache;

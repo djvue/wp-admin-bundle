@@ -2,7 +2,7 @@
 
 namespace Djvue\WpAdminBundle\Configurator;
 
-class ConfigureHooksConfigurator extends AbstractConfigurator
+class ConfigureHooksConfigurator implements ConfiguratorInterface
 {
     public function __construct()
     {

@@ -5,7 +5,7 @@ namespace Djvue\WpAdminBundle\Configurator;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 
-class SlugTranslitConfigurator extends AbstractConfigurator
+class SlugTranslitConfigurator implements ConfiguratorInterface
 {
     public function __construct()
     {

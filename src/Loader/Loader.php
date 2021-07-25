@@ -22,16 +22,11 @@ class Loader implements LoaderInterface
     private array $configurators;
 
     public function __construct(
+        iterable $configurators,
+
         ConfigurationLoaderInterface $configurationLoader,
         DirectoryClassContainer $directoryClassContainer,
         ParameterBagInterface $parameterBag,
-
-        // Configurators
-        FieldGroupConfigurator $fieldGroupConfigurator,
-        HostConfigurator $hostConfigurator,
-        PageTemplatesConfigurator $pageTemplatesConfigurator,
-        SlugTranslitConfigurator $slugTranslitConfigurator,
-        ConfigureHooksConfigurator $configureHooksConfigurator
     )
     {
         $this->configurationLoader = $configurationLoader;

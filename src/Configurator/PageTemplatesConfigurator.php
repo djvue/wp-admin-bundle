@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class PageTemplatesConfigurator extends AbstractConfigurator
+class PageTemplatesConfigurator implements ConfiguratorInterface
 {
     private ParameterBagInterface $parameterBag;
 

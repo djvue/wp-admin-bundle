@@ -73,20 +73,8 @@
         "wpackagist-plugin/post-types-order": "*",
         "wpackagist-plugin/svg-support": "*",
         "wpackagist-plugin/taxonomy-terms-order": "*",
-        "wpackagist-plugin/wordpress-seo": "*"
-    },
-    "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "wp:clear-installation": "symfony-cmd"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@auto-scripts"
-        ]
+        "wpackagist-plugin/wordpress-seo": "*",
+        "symfony/cache": "^5.3"
     },
     "extra": {
         "symfony": {
