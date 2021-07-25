@@ -52,7 +52,7 @@ final class WpFacade
         string $iconUrl = '',
         ?int $position = null
     ): string {
-        \add_menu_page($pageTitle, $menuTitle, $capability, $menuSlug, $function, $iconUrl, $position);
+        return \add_menu_page($pageTitle, $menuTitle, $capability, $menuSlug, $function, $iconUrl, $position);
     }
 
     public function addOptionsPage(array $data): void
