@@ -30,10 +30,10 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
             'init',
             function () {
                 $this->configureWpHeadHooks();
-                $this->configureWpHooks();
                 $this->configureWpFooterHooks();
             }
         );
+        $this->configureWpHooks();
         register_shutdown_function(fn () => $this->onShutdown());
     }
 
