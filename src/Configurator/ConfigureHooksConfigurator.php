@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ConfigureHooksConfigurator implements ConfiguratorInterface
 {
     private string $defaultTimezone;
+    private array $postIdsToRefreshCache = [];
 
     public function __construct(
         private WpFacade $wp,
@@ -29,9 +30,11 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
             'init',
             function () {
                 $this->configureWpHeadHooks();
+                $this->configureWpHooks();
                 $this->configureWpFooterHooks();
             }
         );
+        register_shutdown_function(fn () => $this->onShutdown());
     }
 
     private function configureWpHooks(): void
@@ -39,41 +42,39 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
         $this->wp->removeAllFilters('wp_maybe_load_widgets', 0);
         $this->wp->removeFilter('init', 'wp_widgets_init', 1);
 
-        $this->wp->removeFilter('admin_menu', [$this, 'adminMenu']);
+        $this->wp->addFilter('use_block_editor_for_post', '__return_false', 10);
+        $this->wp->addFilter('use_block_editor_for_post_type', '__return_false', 10);
 
-        $this->wp->removeFilter('init', [$this, 'registerPostTypes']);
+        $this->wp->addFilter('pre_option_permalink_structure', fn () => '/%postname%');
+        $this->wp->addFilter('pre_option_category_base', fn () => '/');
+        $this->wp->addFilter('pre_option_tag_base', fn () => '/tags');
 
-        $this->wp->removeFilter('use_block_editor_for_post', '__return_false', 10);
-        $this->wp->removeFilter('use_block_editor_for_post_type', '__return_false', 10);
-
-        $this->wp->removeFilter('pre_option_permalink_structure', fn () => '/%postname%');
-        $this->wp->removeFilter('pre_option_category_base', fn () => '/');
-        $this->wp->removeFilter('pre_option_tag_base', fn () => '/tags');
-
-        $this->wp->removeFilter('show_admin_bar', '__return_false');
-        $this->wp->removeFilter('wp_headers', fn () => []);
+        $this->wp->addFilter('show_admin_bar', '__return_false');
+        $this->wp->addFilter('wp_headers', fn () => []);
 
         $this->wp->addFilter(
             'acf/update_value',
             function ($value, $postId, $field) {
-                $this->optionFields->clearCache();
+                if (!in_array($postId, $this->postIdsToRefreshCache, true)) {
+                    $this->postIdsToRefreshCache[] = $postId;
+                }
 
                 return $value;
             },
             10,
             3
         );
+    }
 
-        $this->wp->addFilter(
-            'acf/update_value',
-            function ($value, $postId, $field) {
-                $this->postFields->clearCache($postId);
-
-                return $value;
-            },
-            10,
-            3
-        );
+    private function onShutdown(): void
+    {
+        foreach ($this->postIdsToRefreshCache as $postId) {
+            if ($postId === 'options') {
+                $this->optionFields->refresh();
+            } elseif (is_int($postId)) {
+                $this->postFields->refresh($postId);
+            }
+        }
     }
 
     private function configureWpHeadHooks(): void
