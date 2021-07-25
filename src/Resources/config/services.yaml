@@ -45,6 +45,9 @@ services:
         arguments:
             - '%wp_admin.page_templates%'
 
+    Djvue\WpAdminBundle\Service\WpFacade:
+        arguments:
+            - '%wp_admin.host%'
     Djvue\WpAdminBundle\Service\OptionFields:
         arguments:
             - '%wp_admin.enable_options_cache%'

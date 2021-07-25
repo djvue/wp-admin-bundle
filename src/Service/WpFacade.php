@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Service;
 
-use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
 final class WpFacade
 {
-    private string $host;
-
     public function __construct(
-        ParameterBagInterface $parameterBag
+        private string $host
     ) {
-        $this->host = $parameterBag->get('wp_admin.host');
     }
 
     public function addFilter(string $hookName, callable $callback, int $priority = 10, int $acceptedArgs = 1): void
