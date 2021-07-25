@@ -102,4 +102,10 @@ final class OptionFields
     {
         $this->cache->delete(self::FIELDS_OPTIONS_CACHE_KEY);
     }
+
+    public function refresh(): void
+    {
+        $this->clearCache();
+        $this->all();
+    }
 }

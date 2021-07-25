@@ -49,6 +49,12 @@ final class PostFields
         $this->cache->delete($this->getCacheKey($postId));
     }
 
+    public function refresh(\WP_Post|int $postId): void
+    {
+        $this->clearCache($postId);
+        $this->all($postId);
+    }
+
     private function getCacheKey(\WP_Post|int|null $postId): string
     {
         $postId = (int) $postId;

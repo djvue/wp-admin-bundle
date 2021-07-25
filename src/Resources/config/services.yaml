@@ -17,9 +17,6 @@ services:
     Djvue\WpAdminBundle\Configurator\:
         resource: '../../Configurator'
 
-    Djvue\WpAdminBundle\Helper\:
-        resource: '../../Helper'
-
     Djvue\WpAdminBundle\Helper\DirectoryClassContainer:
         public: true
         autoconfigure: false
@@ -43,10 +40,10 @@ services:
         alias: 'Djvue\WpAdminBundle\Loader\ConfiguratorLoader'
     Djvue\WpAdminBundle\Loader\ConfigurationLoader: ~
     Djvue\WpAdminBundle\Service\FieldCacheClearer: ~
-    Djvue\WpAdminBundle\Helper\FieldOptions:
+    Djvue\WpAdminBundle\Service\FieldOptions:
         arguments:
             - '%wp_admin.enable_options_cache%'
-    Djvue\WpAdminBundle\Helper\PostFields:
+    Djvue\WpAdminBundle\Service\PostFields:
         arguments:
             - '%wp_admin.enable_post_fields_cache%'
     Djvue\WpAdminBundle\Configurator\HostConfigurator:
