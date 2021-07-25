@@ -74,7 +74,12 @@ final class WpFacade
 
     public function getFields(mixed $postId, bool $formatValue = true): array
     {
-        return \get_fields($postId, $formatValue);
+        $data = \get_fields($postId, $formatValue);
+        if (!is_array($data)) {
+            return [];
+        }
+
+        return $data;
     }
 
     public function updateField(string $selector, mixed $value, mixed $postId): bool
