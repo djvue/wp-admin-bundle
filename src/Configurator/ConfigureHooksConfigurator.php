@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Configurator;
 
-use Djvue\WpAdminBundle\Service\OptionFieldsCacheClearer;
+use Djvue\WpAdminBundle\Helper\OptionFields;
+use Djvue\WpAdminBundle\Helper\PostFields;
 use Djvue\WpAdminBundle\Service\WpFacade;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -14,7 +15,8 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
 
     public function __construct(
         private WpFacade $wp,
-        private OptionFieldsCacheClearer $fieldOptionsCacheClearer,
+        private OptionFields $optionFields,
+        private PostFields $postFields,
         ParameterBagInterface $parameterBag,
     ) {
         $this->defaultTimezone = $parameterBag->get('wp_admin.default_timezone');
@@ -54,7 +56,18 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
         $this->wp->addFilter(
             'acf/update_value',
             function ($value, $postId, $field) {
-                $this->fieldOptionsCacheClearer->refresh();
+                $this->optionFields->clearCache();
+
+                return $value;
+            },
+            10,
+            3
+        );
+
+        $this->wp->addFilter(
+            'acf/update_value',
+            function ($value, $postId, $field) {
+                $this->postFields->clearCache($postId);
 
                 return $value;
             },

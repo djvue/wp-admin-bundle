@@ -49,3 +49,9 @@ services:
     Djvue\WpAdminBundle\Helper\PostFields:
         arguments:
             - '%wp_admin.enable_post_fields_cache%'
+    Djvue\WpAdminBundle\Configurator\HostConfigurator:
+        arguments:
+            - '%wp_admin.host%'
+    Djvue\WpAdminBundle\Configurator\PageTemplatesConfigurator:
+        arguments:
+            - '%wp_admin.page_templates%'

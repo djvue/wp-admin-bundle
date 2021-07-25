@@ -155,4 +155,16 @@ final class WpFacade
     {
         return \get_permalink($post);
     }
+
+    public function getPostById(int $postId): ?\WP_Post
+    {
+        return \get_post($postId);
+    }
+
+    public function getMainPost(): ?\WP_Post
+    {
+        $mainPageId = (int) get_option('page_on_front');
+
+        return $this->getPostById($mainPageId);
+    }
 }

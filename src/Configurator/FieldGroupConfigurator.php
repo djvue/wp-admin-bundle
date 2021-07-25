@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Djvue\WpAdminBundle\Configurator;
 
 use Djvue\WpAdminBundle\FieldGroup\FieldGroupInterface;
+use Djvue\WpAdminBundle\Service\WpFacade;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class FieldGroupConfigurator implements ConfiguratorInterface
@@ -20,6 +21,7 @@ class FieldGroupConfigurator implements ConfiguratorInterface
         string $enableCache,
         bool $kernelDebug,
         private CacheInterface $cache,
+        private WpFacade $wp,
     ) {
         $this->enableCache = !$kernelDebug && $enableCache;
     }
@@ -39,7 +41,7 @@ class FieldGroupConfigurator implements ConfiguratorInterface
                         return $fn();
                     }
                 );
-                add_action('init', fn () => $group->register(), -100);
+                $this->wp->addFilter('init', fn () => $group->register(), -100);
             }
         }
     }

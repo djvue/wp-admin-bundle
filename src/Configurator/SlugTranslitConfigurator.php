@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Djvue\WpAdminBundle\Configurator;
 
+use Djvue\WpAdminBundle\Service\WpFacade;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\UnicodeString;
 
 class SlugTranslitConfigurator implements ConfiguratorInterface
 {
-    public function __construct()
-    {
+    public function __construct(
+        private WpFacade $wp,
+    ) {
     }
 
     public function run(): void
     {
-        add_filter('sanitize_title', [$this, 'sanitizeTitle'], 9, 3);
-        add_filter('sanitize_file_name', [$this, 'sanitizeFileName'], 10, 3);
-        add_filter('wp_insert_post_data', [$this, 'sanitizePostName'], 10, 2);
+        $this->wp->addFilter('sanitize_title', [$this, 'sanitizeTitle'], 9, 3);
+        $this->wp->addFilter('sanitize_file_name', [$this, 'sanitizeFileName'], 10, 3);
+        $this->wp->addFilter('wp_insert_post_data', [$this, 'sanitizePostName'], 10, 2);
     }
 
     /**
@@ -115,13 +117,17 @@ class SlugTranslitConfigurator implements ConfiguratorInterface
     public function translit(string $s): string
     {
         $s = mb_strtolower($s);
-        return (new AsciiSlugger())->slug($s);
+
+        return (string) (new AsciiSlugger())->slug($s);
     }
 
     public function translitFileName(string $s): string
     {
         $s = mb_strtolower($s);
-        return (new UnicodeString($s))->ascii();
+        $s = (string) (new UnicodeString($s))->ascii();
+        $s = preg_replace('/[^a-z0-9-_]/', '-', $s);
+
+        return $s;
     }
 
     /**
@@ -162,7 +168,6 @@ class SlugTranslitConfigurator implements ConfiguratorInterface
      */
     private function isGutenbergEditorActive(): bool
     {
-
         // Gutenberg plugin is installed and activated.
         $gutenberg = !(false === has_filter('replace_editor', 'gutenberg_init'));
 
@@ -205,8 +210,7 @@ class SlugTranslitConfigurator implements ConfiguratorInterface
         }
 
         if (
-            !$data['post_name'] && $data['post_title'] &&
-            !in_array($data['post_status'], array('auto-draft', 'revision'), true)
+            !$data['post_name'] && $data['post_title'] && !in_array($data['post_status'], array('auto-draft', 'revision'), true)
         ) {
             $data['post_name'] = sanitize_title($data['post_title']);
         }
