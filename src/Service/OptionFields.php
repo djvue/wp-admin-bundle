@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Djvue\WpAdminBundle\Helper;
+namespace Djvue\WpAdminBundle\Service;
 
-use Djvue\WpAdminBundle\Service\WpFacade;
 use Symfony\Contracts\Cache\CacheInterface;
 
 final class OptionFields
