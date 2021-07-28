@@ -20,12 +20,13 @@ final class PostFields
 
     public function get(string $name, \WP_Post|int $postId): mixed
     {
+        $postId = $this->getPostId($postId);
         return $this->all($postId)[$name] ?? null;
     }
 
     public function all(\WP_Post|int $postId): array
     {
-        $postId = (int) $postId;
+        $postId = $this->getPostId($postId);
         if (!isset(self::$cached[$postId])) {
             self::$cached[$postId] = $this->fetchValue($postId);
         }
@@ -45,19 +46,30 @@ final class PostFields
 
     public function clearCache(\WP_Post|int $postId): void
     {
+        $postId = $this->getPostId($postId);
         $this->cache->delete($this->getCacheKey($postId));
     }
 
     public function refresh(\WP_Post|int $postId): void
     {
+        $postId = $this->getPostId($postId);
         $this->clearCache($postId);
         $this->all($postId);
     }
 
     private function getCacheKey(\WP_Post|int|null $postId): string
     {
-        $postId = (int) $postId;
+        $postId = $this->getPostId($postId);
 
         return self::POST_FIELDS_CACHE_KEY_PREFIX.'_'.$postId;
+    }
+
+    private function getPostId(\WP_Post|int|null $postId): int
+    {
+        if ($postId instanceof \WP_Post) {
+            $postId = $postId->ID;
+        }
+
+        return (int) $postId;
     }
 }
