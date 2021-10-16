@@ -106,10 +106,9 @@ class SlugTranslitConfigurator implements ConfiguratorInterface
         // phpcs:enable
 
         if (!empty($term)) {
-            $title = $term;
-        } else {
-            $title = $this->translitFileName($title);
+            return $term;
         }
+        $title = $this->translitFileName($title);
 
         return $title;
     }
@@ -125,7 +124,7 @@ class SlugTranslitConfigurator implements ConfiguratorInterface
     {
         $s = mb_strtolower($s);
         $s = (string) (new UnicodeString($s))->ascii();
-        $s = preg_replace('/[^a-z0-9-_]/', '-', $s);
+        $s = preg_replace('/[^a-z0-9-_.]/', '-', $s);
 
         return $s;
     }
