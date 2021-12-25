@@ -34,15 +34,15 @@
     "require": {
         "php": ">=8.0",
         "ext-mbstring": "*",
-        "symfony/config": "^5.2",
-        "symfony/dependency-injection": "^5.2",
-        "symfony/filesystem": "^5.2",
-        "symfony/routing": "^5.2",
-        "symfony/http-kernel": "^5.2",
-        "symfony/framework-bundle": "^5.2",
-        "symfony/serializer": "^5.2",
-        "symfony/yaml": "^5.2",
-        "symfony/translation": "^5.2",
+        "symfony/config": ">=5.2",
+        "symfony/dependency-injection": ">=5.2",
+        "symfony/filesystem": ">=5.2",
+        "symfony/routing": ">=5.2",
+        "symfony/http-kernel": ">=5.2",
+        "symfony/framework-bundle": ">=5.2",
+        "symfony/serializer": ">=5.2",
+        "symfony/yaml": ">=5.2",
+        "symfony/translation": ">=5.2",
         "stoutlogic/acf-builder": "^1.10"
     },
     "autoload": {
@@ -77,10 +77,6 @@
         "symfony/cache": "^5.3"
     },
     "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "5.2.*"
-        },
         "wordpress-install-dir": "var/public/wp",
         "installer-paths": {
             "var/public/content/plugins/{$name}/": [
