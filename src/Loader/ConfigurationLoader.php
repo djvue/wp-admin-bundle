@@ -39,6 +39,7 @@ class ConfigurationLoader implements ConfigurationLoaderInterface
 
     public function load(): void
     {
+        mysqli_report(MYSQLI_REPORT_OFF);
         if (defined('DOING_AJAX') && DOING_AJAX) {
             set_time_limit(600);
         }

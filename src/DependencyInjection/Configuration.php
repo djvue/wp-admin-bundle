@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->end()
             ->scalarNode('default_timezone')->defaultValue('Europe/Moscow')->end()
+            ->scalarNode('content_directory')->defaultValue('public/content')->end()
             ->end()
         ;
 
