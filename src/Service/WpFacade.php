@@ -168,4 +168,14 @@ final class WpFacade
 
         return $this->getPostById($mainPageId);
     }
+
+    public function getPostMeta(int $postId, string $key, bool $isSingle = true): mixed
+    {
+        return \get_post_meta($postId, $key, $isSingle);
+    }
+
+    public function updatePostMeta(int $postId, string $key, mixed $value): void
+    {
+        \update_post_meta($postId, $key, $value);
+    }
 }
