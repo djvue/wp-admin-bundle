@@ -34,7 +34,11 @@ class ConfigureHooksConfigurator implements ConfiguratorInterface
             }
         );
         $this->configureWpHooks();
-        register_shutdown_function(fn () => $this->onShutdown());
+        $this->wp->addFilter('shutdown', function () {
+            ignore_user_abort(true);
+            fastcgi_finish_request();
+        },                   100);
+        $this->wp->addFilter('shutdown', fn () => $this->onShutdown(), 110);
     }
 
     private function configureWpHooks(): void
