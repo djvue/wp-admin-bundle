@@ -34,6 +34,7 @@ class WpAdminExtension extends Extension
         $container->setParameter('wp_admin.database', $config['database']);
         $container->setParameter('wp_admin.page_templates', $config['page_templates']);
         $container->setParameter('wp_admin.default_timezone', $config['default_timezone']);
+        $container->setParameter('wp_admin.autoload', $config['autoload']);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__).'/Resources/config'));
         $loader->load('services.yaml');

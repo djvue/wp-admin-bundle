@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('post_prefix')->defaultValue('/blog/')->end()
             ->end()
             ->end()
+            ->scalarNode('autoload')->defaultValue(true)->end()
             ->scalarNode('default_timezone')->defaultValue('Europe/Moscow')->end()
             ->scalarNode('content_directory')->defaultValue('public/content')->end()
             ->end()

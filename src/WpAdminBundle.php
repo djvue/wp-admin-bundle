@@ -18,16 +18,16 @@ class WpAdminBundle extends Bundle
     {
         $env = $this->container->getParameter('kernel.environment');
 
-        if ($env !== 'test') {
-            /**
-             * @var LoaderInterface $loader
-             */
-            $loader = $this->container->get(LoaderInterface::class);
-            if ($loader === null) {
-                throw new AutowiringFailedException('Dependency implements LoaderInterface not found');
-            }
-            self::$loader = $loader;
+        /**
+         * @var LoaderInterface $loader
+         */
+        $loader = $this->container->get(LoaderInterface::class);
+        if ($loader === null) {
+            throw new AutowiringFailedException('Dependency implements LoaderInterface not found');
+        }
+        self::$loader = $loader;
 
+        if ($env !== 'test' && $this->container->getParameter('wp_admin.autoload')) {
             $loader->loadCore();
         }
     }
