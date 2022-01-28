@@ -16,7 +16,6 @@ class WpAdminBundle extends Bundle
 
     public function boot(): void
     {
-        $env = $this->container->getParameter('kernel.environment');
 
         /**
          * @var LoaderInterface $loader
@@ -27,9 +26,26 @@ class WpAdminBundle extends Bundle
         }
         self::$loader = $loader;
 
-        if ($env !== 'test' && $this->container->getParameter('wp_admin.autoload')) {
+        if ($this->needAutoload()) {
             $loader->loadCore();
         }
+    }
+
+    private function needAutoload(): bool
+    {
+        $env = $this->container->getParameter('kernel.environment');
+
+        if (defined('WP_ADMIN')) {
+            return true;
+        }
+        if (!$this->container->getParameter('wp_admin.autoload')) {
+            return false;
+        }
+        if ($env === 'test') {
+            return false;
+        }
+
+        return true;
     }
 
     public function build(ContainerBuilder $container): void
