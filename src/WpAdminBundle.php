@@ -35,7 +35,7 @@ class WpAdminBundle extends Bundle
     {
         $env = $this->container->getParameter('kernel.environment');
 
-        if (defined('WP_ADMIN')) {
+        if (defined('IS_WP_ENTRYPOINT') && IS_WP_ENTRYPOINT) {
             return true;
         }
         if (!$this->container->getParameter('wp_admin.autoload')) {
