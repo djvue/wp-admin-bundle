@@ -4,3 +4,9 @@ wp-admin-root:
     defaults:
         path: /wp/wp-admin/index.php
         permanent: true
+
+wp-json:
+    path: /wp-json{childPath}
+    controller: Djvue\WpAdminBundle\Controller\WpJsonController
+    requirements:
+        childPath: .*

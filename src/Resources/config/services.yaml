@@ -54,3 +54,5 @@ services:
     Djvue\WpAdminBundle\Service\PostFields:
         arguments:
             - '%wp_admin.enable_post_fields_cache%'
+    Djvue\WpAdminBundle\Controller\WpJsonController:
+        tags: [controller.service_arguments]
