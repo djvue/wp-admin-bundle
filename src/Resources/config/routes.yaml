@@ -1,0 +1,6 @@
+wp-admin-root:
+    path: /wp/wp-admin
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /wp/wp-admin/index.php
+        permanent: true
